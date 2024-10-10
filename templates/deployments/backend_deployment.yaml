@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      restartPolicy: Always
+      containers:
+        - image: "{{ .Values.backend.image.name }}:{{ .Values.backend.image.tag }}"
+          command: ["sh", "-c", "tail -f /dev/null"]
+          imagePullPolicy: IfNotPresent
+          name: busybox
+          securityContext:
+           readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp-vol
+              mountPath: /tmp
+          livenessProbe:
+            exec:
+              command:
+                - /bin/true
+          readinessProbe:
+            exec:
+              command: ["/bin/nc", "db1-service", "6379", "-e", "true"]
+            initialDelaySeconds: 3
+            periodSeconds: 3
+      volumes:
+        - name: tmp-vol
+          emptyDir: {}

@@ -1,0 +1,20 @@
+postgresql:
+  global:
+    postgresql:
+      auth:
+        # In a real life scenario sensitive information would be handled by an external secrets manager or helm-secrets with sops
+        postgresPassword: password
+  metrics:
+    enabled: true
+
+backend:
+  image:
+    name: busybox
+
+db1:
+  image: nginx
+  tag: 1.16.1-alpine
+
+db2:
+  image: nginx
+  tag: 1.16.1-alpine

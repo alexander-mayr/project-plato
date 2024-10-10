@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: postgres-service-monitor
+  labels:
+    release: {{ .Release.Name }}
+spec:
+  endpoints:
+    - interval: 10s
+      path: /metrics
+      port: http-metrics
+      scheme: http
+  jobLabel: app.kubernetes.io/name
+  namespaceSelector:
+    any: true
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql

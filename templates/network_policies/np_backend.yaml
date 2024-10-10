@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: np-backend
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  egress:
+    - to:
+      - podSelector:
+          matchLabels:
+            app: db1
+      ports:
+        - protocol: TCP
+          port: 80
+    - to:
+      - podSelector:
+          matchLabels:
+            app: db2
+      ports:
+        - protocol: TCP
+          port: 80
